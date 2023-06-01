@@ -1,0 +1,15 @@
+{
+  "name": "node-addon-example-async-work-thread-safe-function-zig",
+  "version": "1.0.0",
+  "description": "Example of addon using Zig. The function accepts a callback which it will call from the worker thread and into which it will pass prime numbers",
+  "main": "example.js",
+  "scripts": {
+    "bdev": "mkdir -p dist && ZIG_SYSTEM_LINKER_HACK=1 zig build-lib -mcpu=baseline -freference-trace -ODebug -dynamic -lc -isystem deps/node-$(node --version)/include/node src/lib.zig -fallow-shlib-undefined -femit-bin=dist/lib.node",
+    "build": "mkdir -p dist && ZIG_SYSTEM_LINKER_HACK=1 zig build-lib -mcpu=baseline -OReleaseSafe -dynamic -lc -isystem deps/node-$(node --version)/include/node src/lib.zig -fallow-shlib-undefined -femit-bin=dist/lib.node",
+    "exec": "node example.js",
+    "bun": "bun example.js",
+    "postinstall": "./download-node-headers.sh"
+  },
+  "author": "Felixdrp",
+  "license": "ISC"
+}
