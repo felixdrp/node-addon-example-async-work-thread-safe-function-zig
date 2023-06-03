@@ -53,6 +53,7 @@ Many thanks to `nodejs/node-addon-examples`. [1]:(https://github.com/nodejs/node
  - [zig api ref](https://ziglang.org/documentation/master/std/#A;std)
  - [ziglearn](https://ziglearn.org)
  - [ikrima.dev zig-crash-course](https://ikrima.dev/dev-notes/zig/zig-crash-course/)
+ - [zig.news](https://zig.news/)
 
 ## Debug Zig
 
