@@ -34,7 +34,7 @@ fn CallJs(
     var status: c.napi_status = undefined;
 
     // Retrieve the prime from the item created by the worker thread.
-    var prime_container = @intToPtr(*[]u32, @ptrToInt(data)).*;
+    var prime_container = @as(*[]u32, @ptrFromInt(@intFromPtr(data))).*;
     var the_prime = prime_container[0];
 
     // env and js_cb may both be NULL if Node.js is in its cleanup phase, and
@@ -74,7 +74,7 @@ fn ExecuteWork(
     data: ?*anyopaque
 ) callconv(.C) void {
     _ = env;
-    var addon_data: AddonData = @intToPtr(*AddonData, @ptrToInt(data)).*;
+    var addon_data: AddonData = @as(*AddonData, @ptrFromInt(@intFromPtr(data))).*;
 
     var idx_outer:u32 = 2;
     var idx_inner:u32 = undefined;
@@ -117,7 +117,7 @@ fn ExecuteWork(
             // have happened when this function returns, but it will be queued.
             status = c.napi_call_threadsafe_function(
                 addon_data.tsfn,
-                @intToPtr(?*anyopaque, @ptrToInt(&the_prime)),
+                @as(?*anyopaque, @ptrFromInt(@intFromPtr(&the_prime))),
                 c.napi_tsfn_blocking);
         }
     }
@@ -135,7 +135,7 @@ fn WorkComplete(
 ) callconv(.C) void {
     _ = status;
     var status_local: c.napi_status = undefined;
-    var addon_data: AddonData = @intToPtr(*[]AddonData, @ptrToInt(data)).*[0];
+    var addon_data: AddonData = @as(*[]AddonData, @ptrFromInt(@intFromPtr(data))).*[0];
     // Clean up the thread-safe function and 
     // the work item associated with this run.
     status_local = c.napi_release_threadsafe_function(addon_data.tsfn,
@@ -164,9 +164,9 @@ fn StartThread(env: c.napi_env, info: c.napi_callback_info) callconv(.C) c.napi_
         &argc,
         &argv,
         null,
-        @intToPtr(
-            [*c]?*anyopaque,
-            @ptrToInt(&addon_data))
+        @as([*c]?*anyopaque,
+            @ptrFromInt(
+                @intFromPtr(&addon_data)))
     );
     js_cb = argv[0];
 
@@ -227,7 +227,7 @@ fn addon_getting_unloaded(
 ) callconv(.C) void {
     _ = hint;
     _ = env;
-  var addon_data: []AddonData  = @intToPtr(*[]AddonData, @ptrToInt(data)).*;
+  var addon_data: []AddonData  = @as(*[]AddonData, @ptrFromInt(@intFromPtr(data))).*;
   if (addon_data[0].work == null) {
     std.log.warn("No work item in progress at module unload", .{});
   }
@@ -259,9 +259,9 @@ export fn napi_register_module_v1(env: c.napi_env, exports: c.napi_value) c.napi
         .setter = null,
         .value = null,
         .attributes = c.napi_default,
-        .data = @intToPtr(
-            ?*anyopaque,
-            @ptrToInt(&addon_data[0]))
+        .data = @as(?*anyopaque,
+                    @ptrFromInt(
+                        @intFromPtr(&addon_data[0])))
     };
 
     // Decorate exports with the above-defined properties.
@@ -271,9 +271,9 @@ export fn napi_register_module_v1(env: c.napi_env, exports: c.napi_value) c.napi
     // the addon gets unloaded our data gets freed.
     status = c.napi_wrap(env,
                     exports,
-                    @intToPtr(
-                        ?*anyopaque,
-                        @ptrToInt(&addon_data)),
+                    @as(?*anyopaque, 
+                        @ptrFromInt(
+                            @intFromPtr(&addon_data))),
                     addon_getting_unloaded,
                     null,
                     null);
