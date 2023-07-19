@@ -1,4 +1,6 @@
-# node-addon-example-async-work-thread-safe-function-zig <img alt="Zig Logo" src="https://raw.githubusercontent.com/ziglang/logo/master/zig-logo-dark.svg" width="200">
+# node-addon-example-async-work-thread-safe-function-zig
+
+<img alt="Zig Logo" src="https://raw.githubusercontent.com/ziglang/logo/master/zig-logo-dark.svg" width="200">
 
 Example of addon using [Zig lang](https://ziglang.org/). The function accepts a callback which it will call from the worker thread and into which it will pass prime numbers<br>
 For more info about `C/C++ addons with Node-API`, see [C/C++ addons with Node-API](https://nodejs.org/api/n-api.html) [[github]](https://github.com/nodejs/node/blob/main/doc/api/n-api.md).
